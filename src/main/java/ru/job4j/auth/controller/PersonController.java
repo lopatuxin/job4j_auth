@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.auth.domain.Person;
-import ru.job4j.auth.repository.PersonRepository;
+import ru.job4j.auth.service.PersonService;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @RequestMapping("/person")
 @AllArgsConstructor
 public class PersonController {
-    private final PersonRepository persons;
+    private final PersonService persons;
 
     @GetMapping("/")
     public List<Person> findAll() {
@@ -39,7 +40,9 @@ public class PersonController {
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person) {
-        persons.save(person);
+        if (persons.update(person)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Объект не обновлен");
+        }
         return ResponseEntity.ok().build();
     }
 
@@ -47,7 +50,9 @@ public class PersonController {
     public ResponseEntity<Void> delete(@PathVariable int id) {
         Person person = new Person();
         person.setId(id);
-        persons.delete(person);
+        if (!persons.delete(person)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Объект не удален");
+        }
         return ResponseEntity.ok().build();
     }
 }
