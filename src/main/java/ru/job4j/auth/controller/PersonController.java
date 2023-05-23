@@ -15,6 +15,7 @@ import ru.job4j.auth.service.PersonService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,7 @@ public class PersonController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Person person) {
+    public ResponseEntity<Void> update(@Valid @RequestBody Person person) {
         if (person == null) {
             throw new NullPointerException("Person is empty");
         }
@@ -62,7 +63,7 @@ public class PersonController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Void> signUp(@RequestBody Person person) {
+    public ResponseEntity<Void> signUp(@Valid @RequestBody Person person) {
         if (person == null) {
             throw new NullPointerException("Person is empty");
         }
