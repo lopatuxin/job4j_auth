@@ -22,16 +22,17 @@ public class PersonController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Person> findById(@PathVariable int id) {
-        var person = persons.findById(id);
-        return new ResponseEntity<Person>(
-                person.orElse(new Person()),
-                person.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND
-        );
+    public Person findById(@PathVariable int id) {
+        return persons.findById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Person is not found"
+        ));
     }
 
     @PostMapping("/")
     public ResponseEntity<Person> create(@RequestBody Person person) {
+        if (person == null) {
+            throw new NullPointerException("Person is empty");
+        }
         return new ResponseEntity<Person>(
                 persons.save(person),
                 HttpStatus.CREATED
@@ -40,6 +41,9 @@ public class PersonController {
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person) {
+        if (person == null) {
+            throw new NullPointerException("Person is empty");
+        }
         if (persons.update(person)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Объект не обновлен");
         }
