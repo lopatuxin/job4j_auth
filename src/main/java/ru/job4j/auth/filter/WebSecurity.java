@@ -1,4 +1,3 @@
-/*
 package ru.job4j.auth.filter;
 
 import lombok.AllArgsConstructor;
@@ -47,5 +46,3 @@ public class WebSecurity  extends WebSecurityConfigurerAdapter {
         return source;
     }
 }
-
- */
