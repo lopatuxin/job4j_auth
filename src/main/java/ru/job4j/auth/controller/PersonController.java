@@ -61,7 +61,7 @@ public class PersonController {
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody Person person) {
+    public ResponseEntity<Void> signUp(@RequestBody Person person) {
         if (person == null) {
             throw new NullPointerException("Person is empty");
         }
@@ -70,6 +70,7 @@ public class PersonController {
         }
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         persons.save(person);
+        return ResponseEntity.ok().build();
     }
 
     @ExceptionHandler(value = { IllegalArgumentException.class })
